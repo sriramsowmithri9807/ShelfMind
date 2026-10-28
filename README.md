@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 ShelfMind
+# ShelfMind
 
 ### A stockroom robot that understands plain English, notices its own mistakes, and fixes them.
 
