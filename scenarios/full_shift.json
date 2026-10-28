@@ -1,0 +1,49 @@
+{
+  "name": "Full shift",
+  "about": "One working day in the stockroom: restock, incidents, orders, returns, a display stack, re-sorting, a messy stockroom, shelf cleaning and the end-of-day check. Each step has a plain-English task (what Nemotron reads) and a goal (what the controller checks).",
+  "steps": [
+    {"say": "Morning restock (a box slips on the way)", "disturb": "drop",
+     "task": "Restock the shelves. Heavy boxes go on the low shelf and light boxes go on the high shelf. On each shelf, order them left to right: red, green, blue.",
+     "goal": {"where": {"red_box_1": "low_shelf_1", "green_box_1": "low_shelf_2", "blue_box_2": "low_shelf_3",
+                        "red_box_2": "high_shelf_1", "green_box_2": "high_shelf_2", "blue_box_1": "high_shelf_3"}}},
+
+    {"say": "Someone bumps the low shelf", "event": "knock"},
+
+    {"say": "Outbound order SO-1042", "order": "SO-1042"},
+
+    {"say": "Customer returns SO-1043", "order": "SO-1043"},
+
+    {"say": "Build a display stack",
+     "task": "Build a display: stack the light red box on top of the heavy red box. Leave the other boxes where they are.",
+     "goal": {"where": {"red_box_2": "on:red_box_1", "red_box_1": "low_shelf_1"}, "same": true}},
+
+    {"say": "Take the display down",
+     "task": "Take the display down: put the light red box back on high_shelf_1.",
+     "goal": {"where": {"red_box_2": "high_shelf_1", "red_box_1": "low_shelf_1"}, "same": true}},
+
+    {"say": "Re-sort: swap red and blue on the low shelf",
+     "task": "On the low shelf, swap the red box and the blue box. Leave every other box where it is.",
+     "goal": {"where": {"red_box_1": "low_shelf_3", "blue_box_2": "low_shelf_1"}, "same": true}},
+
+    {"say": "Put the low shelf back in order",
+     "task": "Put the low shelf back in order: left to right red, green, blue.",
+     "goal": {"where": {"red_box_1": "low_shelf_1", "green_box_1": "low_shelf_2", "blue_box_2": "low_shelf_3"}}},
+
+    {"say": "The stockroom gets messed up", "event": "scatter", "seed": 42},
+
+    {"say": "Tidy up after the mess",
+     "task": "The stockroom is a mess. Restock the shelves: heavy boxes on the low shelf, light boxes on the high shelf, left to right red, green, blue.",
+     "goal": {"where": {"red_box_1": "low_shelf_1", "green_box_1": "low_shelf_2", "blue_box_2": "low_shelf_3",
+                        "red_box_2": "high_shelf_1", "green_box_2": "high_shelf_2", "blue_box_1": "high_shelf_3"}}},
+
+    {"say": "Clear the high shelf for cleaning",
+     "task": "The cleaners are coming: clear the high shelf and put its boxes in the dispatch bay (the front row of the table).",
+     "goal": {"where": {"red_box_2": "dispatch", "green_box_2": "dispatch", "blue_box_1": "dispatch"},
+              "empty": ["high_shelf_1", "high_shelf_2", "high_shelf_3"]}},
+
+    {"say": "End of day: everything back in place",
+     "task": "End of the day: put the boxes from the dispatch bay back on the high shelf, left to right red, green, blue, so every box is in its proper place.",
+     "goal": {"where": {"red_box_1": "low_shelf_1", "green_box_1": "low_shelf_2", "blue_box_2": "low_shelf_3",
+                        "red_box_2": "high_shelf_1", "green_box_2": "high_shelf_2", "blue_box_1": "high_shelf_3"}}}
+  ]
+}

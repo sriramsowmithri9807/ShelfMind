@@ -1,0 +1,207 @@
+[
+ {
+  "id": "restock_from_table",
+  "start": "initial",
+  "task": "Restock the shelves. Heavy boxes go on the low shelf and light boxes go on the high shelf. On each shelf, order them left to right: red, green, blue.",
+  "goal": {
+   "where": {
+    "red_box_1": "low_shelf_1",
+    "green_box_1": "low_shelf_2",
+    "blue_box_2": "low_shelf_3",
+    "red_box_2": "high_shelf_1",
+    "green_box_2": "high_shelf_2",
+    "blue_box_1": "high_shelf_3"
+   }
+  }
+ },
+ {
+  "id": "restock_from_mess",
+  "start": "scatter:7",
+  "task": "Restock the shelves. Heavy boxes go on the low shelf and light boxes go on the high shelf. On each shelf, order them left to right: red, green, blue.",
+  "goal": {
+   "where": {
+    "red_box_1": "low_shelf_1",
+    "green_box_1": "low_shelf_2",
+    "blue_box_2": "low_shelf_3",
+    "red_box_2": "high_shelf_1",
+    "green_box_2": "high_shelf_2",
+    "blue_box_1": "high_shelf_3"
+   }
+  }
+ },
+ {
+  "id": "swap_red_blue",
+  "start": "restocked",
+  "task": "On both shelves, swap the red box and the blue box. Leave the green boxes where they are.",
+  "goal": {
+   "where": {
+    "red_box_1": "low_shelf_3",
+    "blue_box_2": "low_shelf_1",
+    "red_box_2": "high_shelf_3",
+    "blue_box_1": "high_shelf_1"
+   },
+   "same": true
+  }
+ },
+ {
+  "id": "all_to_table",
+  "start": "restocked",
+  "task": "Put every box back on the pickup table.",
+  "goal": {
+   "where": {
+    "red_box_1": "table",
+    "green_box_1": "table",
+    "blue_box_2": "table",
+    "red_box_2": "table",
+    "green_box_2": "table",
+    "blue_box_1": "table"
+   }
+  }
+ },
+ {
+  "id": "keep_slot_empty",
+  "start": "initial",
+  "task": "Restock the shelves: heavy boxes on the low shelf, light boxes on the high shelf, but keep high_shelf_2 empty. Put the light green box in table_5 instead.",
+  "goal": {
+   "where": {
+    "red_box_1": "low_shelf",
+    "green_box_1": "low_shelf",
+    "blue_box_2": "low_shelf",
+    "red_box_2": "high_shelf",
+    "blue_box_1": "high_shelf",
+    "green_box_2": "table_5"
+   },
+   "empty": [
+    "high_shelf_2"
+   ]
+  }
+ },
+ {
+  "id": "light_only_reverse",
+  "start": "initial",
+  "task": "Move only the light boxes to the high shelf, left to right: blue, green, red. Leave the heavy boxes where they are.",
+  "goal": {
+   "where": {
+    "blue_box_1": "high_shelf_1",
+    "green_box_2": "high_shelf_2",
+    "red_box_2": "high_shelf_3"
+   },
+   "same": true
+  }
+ },
+ {
+  "id": "stack_reds",
+  "start": "restocked",
+  "task": "Stack the light red box on top of the heavy red box.",
+  "goal": {
+   "where": {
+    "red_box_2": "on:red_box_1",
+    "red_box_1": "low_shelf_1"
+   },
+   "same": true
+  }
+ },
+ {
+  "id": "clear_low_shelf",
+  "start": "restocked",
+  "task": "Clear the low shelf: put its boxes in the dispatch bay (the front row of the table).",
+  "goal": {
+   "where": {
+    "red_box_1": "dispatch",
+    "green_box_1": "dispatch",
+    "blue_box_2": "dispatch"
+   },
+   "empty": [
+    "low_shelf_1",
+    "low_shelf_2",
+    "low_shelf_3"
+   ],
+   "same": true
+  }
+ },
+ {
+  "id": "ship_order",
+  "start": "restocked",
+  "task": "Ship an order: move red_box_2 and green_box_1 to the dispatch bay. Leave every other box where it is.",
+  "goal": {
+   "where": {
+    "red_box_2": "dispatch",
+    "green_box_1": "dispatch"
+   },
+   "same": true
+  }
+ },
+ {
+  "id": "ambiguous_ask",
+  "start": "restocked",
+  "task": "Put the important ones away.",
+  "expect_question": true
+ },
+ {
+  "id": "greens_to_high",
+  "start": "restocked",
+  "task": "Move both green boxes to the high shelf, using any free space you can make. The heavy green box may go on the table if needed, but in the end both greens must be on the high shelf.",
+  "goal": {
+   "where": {
+    "green_box_1": "high_shelf",
+    "green_box_2": "high_shelf"
+   }
+  }
+ },
+ {
+  "id": "unstack",
+  "start": "restocked",
+  "layout_extra": {
+   "red_box_2": "on:red_box_1"
+  },
+  "task": "The light red box is stacked on the heavy red box. Unstack it and put it on high_shelf_1.",
+  "goal": {
+   "where": {
+    "red_box_2": "high_shelf_1",
+    "red_box_1": "low_shelf_1"
+   }
+  }
+ },
+ {
+  "id": "heavy_to_dispatch",
+  "start": "initial",
+  "task": "Send all the heavy boxes to the dispatch bay (front row of the table). Light boxes can go anywhere except the dispatch bay.",
+  "goal": {
+   "where": {
+    "red_box_1": "dispatch",
+    "green_box_1": "dispatch",
+    "blue_box_2": "dispatch"
+   }
+  }
+ },
+ {
+  "id": "reverse_low_shelf",
+  "start": "restocked",
+  "task": "Reverse the order of the low shelf: left to right blue, green, red.",
+  "goal": {
+   "where": {
+    "blue_box_2": "low_shelf_1",
+    "green_box_1": "low_shelf_2",
+    "red_box_1": "low_shelf_3"
+   },
+   "same": true
+  }
+ },
+ {
+  "id": "clear_for_cleaning",
+  "start": "restocked",
+  "task": "The cleaners are coming: clear the high shelf and put its boxes in the dispatch bay.",
+  "goal": {
+   "where": {
+    "red_box_2": "dispatch",
+    "green_box_2": "dispatch",
+    "blue_box_1": "dispatch"
+   },
+   "empty": [
+    "high_shelf_1",
+    "high_shelf_2",
+    "high_shelf_3"
+   ]
+  }
+ }
+]

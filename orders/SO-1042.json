@@ -1,0 +1,10 @@
+{
+  "order_id": "SO-1042",
+  "type": "outbound",
+  "customer": "Acme Workshop",
+  "note": "Urgent, truck leaves at 4 pm",
+  "lines": [
+    {"item": "red_box_2", "qty": 1, "to": "dispatch"},
+    {"item": "green_box_1", "qty": 1, "to": "dispatch"}
+  ]
+}

@@ -1,0 +1,3 @@
+# ShelfMind job. Write it in plain English. Lines starting with # are ignored.
+# Edit this file, then click the 3D view in Webots and press T.
+Restock the shelves. Heavy boxes go on the low shelf and light boxes go on the high shelf. On each shelf, order them left to right: red, green, blue.

@@ -1,0 +1,10 @@
+; ShelfMind settings. Webots reads this file when it starts the controller.
+; Paste your Nebius Token Factory key below. This file is in .gitignore.
+[environment variables]
+NEBIUS_API_KEY = paste-your-key-here
+NEBIUS_MODEL = nvidia/nemotron-3-super-120b-a12b
+; Smaller model for comparison (key N) and the vision model (key V). Run check_nebius.py to see which exist.
+NEBIUS_MODEL_SMALL = nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B
+NEBIUS_VISION_MODEL = google/gemma-3-27b-it
+NEBIUS_BASE_URL = https://api.tokenfactory.us-central1.nebius.com/v1/
+ALLOW_BACKUP_PLANNER = 1

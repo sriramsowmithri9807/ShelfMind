@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShelfMind Control Panel</title>
+  <link rel="stylesheet" href="shelfmind_panel.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="logo">ShelfMind</span>
+      <span id="brain" class="brain">connecting...</span>
+    </div>
+    <div class="header-right">
+      <label class="model-pick">Model
+        <select id="model"></select>
+      </label>
+      <span id="conn" class="conn" title="Connection to Webots"></span>
+      <span id="simtime" class="simtime">0.0 s</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="col">
+      <div class="card">
+        <h2>Give the robot a job</h2>
+        <textarea id="task" rows="3" placeholder="e.g. Put all the light boxes on the table"></textarea>
+        <div class="row">
+          <button id="mic" class="btn ghost" title="Speak the job (Chrome, Edge or Safari)">&#127908; Speak</button>
+          <span id="mic-note" class="note"></span>
+          <span class="grow"></span>
+          <button id="run" class="btn primary">Run job</button>
+        </div>
+        <div class="chips" id="examples"></div>
+      </div>
+
+      <div id="question-card" class="card question hidden">
+        <h2>Nemotron has a question</h2>
+        <p id="question"></p>
+        <div class="row">
+          <input id="answer" type="text" placeholder="Your answer">
+          <button id="send-answer" class="btn primary">Answer</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Now</h2>
+        <p id="current-task" class="muted small current-task"></p>
+        <p id="status" class="status">-</p>
+        <p id="reasoning" class="reasoning"></p>
+      </div>
+
+      <div class="card">
+        <h2>Plan <span id="plan-count" class="muted"></span></h2>
+        <ol id="plan" class="plan"><li class="muted">No plan yet.</li></ol>
+      </div>
+
+      <div class="card">
+        <h2>Stock orders</h2>
+        <div id="orders" class="orders"><span class="muted">No orders in the orders/ folder.</span></div>
+      </div>
+    </section>
+
+    <section class="col">
+      <div class="tiles">
+        <div class="tile"><div class="tile-label">Tasks</div><div id="t-tasks" class="tile-value">0</div></div>
+        <div class="tile"><div class="tile-label">Success</div><div id="t-success" class="tile-value">-</div></div>
+        <div class="tile"><div class="tile-label">Avg attempts</div><div id="t-attempts" class="tile-value">-</div></div>
+        <div class="tile"><div class="tile-label">Recoveries</div><div id="t-recov" class="tile-value">0</div></div>
+        <div class="tile"><div class="tile-label">Avg Nemotron latency</div><div id="t-latency" class="tile-value">-</div></div>
+        <div class="tile"><div class="tile-label">Tokens</div><div id="t-tokens" class="tile-value">0</div></div>
+      </div>
+
+      <div class="card">
+        <h2>Make trouble, test the robot</h2>
+        <div class="buttons">
+          <button class="btn" data-cmd="drop" title="D">Drop carried box</button>
+          <button class="btn" data-cmd="knock" title="K">Knock a box off</button>
+          <button class="btn" data-cmd="scatter" title="M">Mess up boxes</button>
+          <button class="btn" data-cmd="reset" title="R">Reset boxes</button>
+          <button class="btn" data-cmd="vision" title="V">Vision check</button>
+          <button class="btn" data-cmd="benchmark" title="B">Run benchmark</button>
+          <button class="btn shift-btn" data-cmd="shift" title="G">Run full shift</button>
+          <button class="btn hidden" id="inspector-btn" data-cmd="inspector" title="H">Inspector patrol on/off</button>
+        </div>
+        <div class="toggles">
+          <label class="toggle"><input id="recovery" type="checkbox"> Self-recovery (replan + watch mode)</label>
+          <label class="toggle"><input id="perception" type="checkbox"> Plan from the camera (vision model)</label>
+        </div>
+        <p id="modes" class="muted small"></p>
+      </div>
+
+      <div class="card">
+        <h2>Robots and boxes</h2>
+        <div id="robots" class="robots"></div>
+        <table class="boxes"><thead><tr><th>Box</th><th>Weight</th><th>Where</th></tr></thead>
+          <tbody id="boxes"></tbody></table>
+      </div>
+
+      <div id="shift-card" class="card hidden">
+        <h2>Full shift <span id="shift-sum" class="muted"></span></h2>
+        <div class="bar"><div id="shift-bar"></div></div>
+        <ol id="shift" class="shift"></ol>
+      </div>
+
+      <div id="bench-card" class="card hidden">
+        <h2>Benchmark <span id="bench-sum" class="muted"></span></h2>
+        <div class="bar"><div id="bench-bar"></div></div>
+        <ul id="bench" class="bench"></ul>
+      </div>
+
+      <div id="camera-card" class="card hidden">
+        <h2>What the camera sees</h2>
+        <img id="camera" alt="Latest camera snapshot">
+      </div>
+
+      <div class="card">
+        <h2>Memory <button id="forget" class="btn tiny ghost">Forget</button></h2>
+        <ul id="lessons" class="lessons"><li class="muted">No lessons yet.</li></ul>
+      </div>
+
+      <div class="card">
+        <h2>Events</h2>
+        <ul id="events" class="events"></ul>
+      </div>
+    </section>
+  </main>
+  <script src="shelfmind_panel.js"></script>
+</body>
+</html>

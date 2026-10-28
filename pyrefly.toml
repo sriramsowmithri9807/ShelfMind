@@ -1,0 +1,6 @@
+# Editor type-checking settings (Pyrefly). Webots provides the `controller` module at run
+# time; this tells the checker where to find it. It does not affect how the robot runs.
+search-path = [
+  "controllers/stockroom_brain",
+  "/Applications/Webots.app/Contents/lib/controller/python",
+]

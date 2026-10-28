@@ -1,0 +1,18 @@
+# Secrets: your Nebius key lives here (use runtime.ini.example as the template)
+controllers/stockroom_brain/runtime.ini
+runtime.ini
+
+# Run-time output
+logs/
+memory/
+results.png
+worlds/stockroom_bench.wbt
+
+# Webots per-user window layout and thumbnails
+worlds/.*.wbproj
+worlds/.*.jpg
+
+# Python and macOS clutter
+__pycache__/
+*.pyc
+.DS_Store

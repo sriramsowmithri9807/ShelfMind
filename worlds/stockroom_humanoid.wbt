@@ -1,0 +1,276 @@
+#VRML_SIM R2025a utf8
+WorldInfo {
+  info [
+    "ShelfMind: a stockroom gantry robot whose brain is NVIDIA Nemotron (via Nebius Token Factory)."
+    "Click the 3D view and press T to run task.txt. Double-click the robot to open the control panel."
+  ]
+  title "ShelfMind humanoid inspector"
+  basicTimeStep 16
+  contactProperties [
+    ContactProperties {
+      coulombFriction [
+        0.9
+      ]
+      bounce 0.1
+    }
+  ]
+}
+Viewpoint {
+  fieldOfView 0.95
+  orientation -0.1691 0.7592 0.6285 0.6812
+  position -3.1 -1.5 2.4
+}
+Background {
+  skyColor [
+    0.05 0.06 0.08
+  ]
+  luminosity 0.8
+}
+DirectionalLight {
+  ambientIntensity 0.6
+  direction -0.4 0.3 -1
+  intensity 2.5
+  castShadows TRUE
+}
+DirectionalLight {
+  ambientIntensity 0.3
+  direction 0.5 -0.6 -0.7
+  intensity 1
+}
+# Floor with two yellow safety lines
+Solid {
+  translation 0 0 -0.01
+  children [
+    Shape { appearance PBRAppearance { baseColor 0.28 0.29 0.31 roughness 0.9 metalness 0.0  } geometry DEF FLOOR_BOX Box { size 4 4 0.02 } }
+    Pose { translation 0 0.75 0.011  children [ Shape { appearance DEF SAFETY_YELLOW PBRAppearance { baseColor 1 0.8 0 roughness 0.6 metalness 0.0  } geometry Box { size 3.6 0.05 0.002 }  } ] }
+    Pose { translation 0 -0.75 0.011  children [ Shape { appearance USE SAFETY_YELLOW geometry Box { size 3.6 0.05 0.002 }  } ] }
+  ]
+  name "floor"
+  boundingObject USE FLOOR_BOX
+}
+# Pickup table (top at z = 0.40)
+Solid {
+  translation -0.5 0 0.2
+  children [
+    Shape { appearance PBRAppearance { baseColor 0.5 0.36 0.22 roughness 0.7 metalness 0.0  } geometry DEF TABLE_BOX Box { size 0.6 0.8 0.4 } }
+  ]
+  name "pickup_table"
+  boundingObject USE TABLE_BOX
+}
+# Low shelf (top at z = 0.30), for heavy boxes
+Solid {
+  translation 0.35 0 0
+  children [
+    Pose { translation 0 0 0.29  children [ Shape { appearance PBRAppearance { baseColor 0.2 0.35 0.6 roughness 0.5 metalness 0.2  } geometry DEF LOW_BOARD Box { size 0.3 0.8 0.02 }  } ] }
+    Pose { translation -0.13 -0.38 0.140  children [ Shape { appearance DEF SHELF_METAL PBRAppearance { baseColor 0.7 0.72 0.75 roughness 0.3 metalness 0.3  } geometry Cylinder { radius 0.015 height 0.280 }  } ] }
+    Pose { translation -0.13 0.38 0.140  children [ Shape { appearance USE SHELF_METAL geometry Cylinder { radius 0.015 height 0.280 }  } ] }
+    Pose { translation 0.13 -0.38 0.140  children [ Shape { appearance USE SHELF_METAL geometry Cylinder { radius 0.015 height 0.280 }  } ] }
+    Pose { translation 0.13 0.38 0.140  children [ Shape { appearance USE SHELF_METAL geometry Cylinder { radius 0.015 height 0.280 }  } ] }
+  ]
+  name "low_shelf"
+  boundingObject Pose { translation 0 0 0.29 children [ USE LOW_BOARD ] }
+}
+# High shelf (top at z = 0.60), for light boxes
+Solid {
+  translation 0.75 0 0
+  children [
+    Pose { translation 0 0 0.59  children [ Shape { appearance PBRAppearance { baseColor 0.85 0.45 0.1 roughness 0.5 metalness 0.2  } geometry DEF HIGH_BOARD Box { size 0.3 0.8 0.02 }  } ] }
+    Pose { translation -0.13 -0.38 0.290  children [ Shape { appearance USE SHELF_METAL geometry Cylinder { radius 0.015 height 0.580 }  } ] }
+    Pose { translation -0.13 0.38 0.290  children [ Shape { appearance USE SHELF_METAL geometry Cylinder { radius 0.015 height 0.580 }  } ] }
+    Pose { translation 0.13 -0.38 0.290  children [ Shape { appearance USE SHELF_METAL geometry Cylinder { radius 0.015 height 0.580 }  } ] }
+    Pose { translation 0.13 0.38 0.290  children [ Shape { appearance USE SHELF_METAL geometry Cylinder { radius 0.015 height 0.580 }  } ] }
+  ]
+  name "high_shelf"
+  boundingObject Pose { translation 0 0 0.59 children [ USE HIGH_BOARD ] }
+}
+# Gantry frame (visual only)
+Solid {
+  children [
+    Pose { translation -1.0 -0.65 0.65  children [ Shape { appearance DEF FRAME_METAL PBRAppearance { baseColor 0.35 0.37 0.4 roughness 0.4 metalness 0.3  } geometry Box { size 0.06 0.06 1.3 }  } ] }
+    Pose { translation -1.0 0.65 0.65  children [ Shape { appearance USE FRAME_METAL geometry Box { size 0.06 0.06 1.3 }  } ] }
+    Pose { translation 1.0 -0.65 0.65  children [ Shape { appearance USE FRAME_METAL geometry Box { size 0.06 0.06 1.3 }  } ] }
+    Pose { translation 1.0 0.65 0.65  children [ Shape { appearance USE FRAME_METAL geometry Box { size 0.06 0.06 1.3 }  } ] }
+    Pose { translation 0 -0.65 1.31  children [ Shape { appearance USE FRAME_METAL geometry Box { size 2.06 0.06 0.04 }  } ] }
+    Pose { translation 0 0.65 1.31  children [ Shape { appearance USE FRAME_METAL geometry Box { size 2.06 0.06 0.04 }  } ] }
+  ]
+  name "gantry_frame"
+}
+# Markers for robot A: the box it is handling and the slot it is heading for
+DEF A_BOX_MARKER Pose {
+  translation 0 0 -2
+  children [ Shape { appearance PBRAppearance { baseColor 1 0.85 0.1 roughness 1 metalness 0 emissiveColor 1 0.85 0.1 transparency 0.55 } geometry Box { size 0.13 0.13 0.13 } castShadows FALSE } ]
+}
+DEF A_SLOT_MARKER Pose {
+  translation 0 0 -2
+  children [ Shape { appearance PBRAppearance { baseColor 1 0.85 0.1 roughness 1 metalness 0 emissiveColor 1 0.85 0.1 transparency 0.35 } geometry Box { size 0.16 0.16 0.006 } castShadows FALSE } ]
+}
+# Robot A: x/y/z gantry with a suction pad. Pad bottom height = 1.025 - z_motor.
+Robot {
+  children [
+    SliderJoint {
+      jointParameters JointParameters { axis 1 0 0 position 0 }
+      device [ LinearMotor { name "x_motor" maxVelocity 1 minPosition -0.8 maxPosition 0.9  } PositionSensor { name "x_sensor" } ]
+      endPoint Solid {
+        translation 0 0 1.25
+        children [
+          Shape { appearance PBRAppearance { baseColor 1 0.75 0 roughness 0.4 metalness 0.1  } geometry Box { size 0.08 1.36 0.06 } }
+          SliderJoint {
+            jointParameters JointParameters { axis 0 1 0 position 0 }
+            device [ LinearMotor { name "y_motor" maxVelocity 1 minPosition -0.5 maxPosition 0.5  } PositionSensor { name "y_sensor" } ]
+            endPoint Solid {
+              translation 0 0 -0.06
+              children [
+                Shape { appearance PBRAppearance { baseColor 0.12 0.12 0.14 roughness 0.5 metalness 0.2  } geometry Box { size 0.14 0.12 0.06 } }
+                SliderJoint {
+                  jointParameters JointParameters { axis 0 0 -1 position 0 }
+                  device [ LinearMotor { name "z_motor" maxVelocity 1 minPosition 0 maxPosition 0.95  } PositionSensor { name "z_sensor" } ]
+                  endPoint Solid {
+                    translation 0 0 -0.15
+                    children [
+                      Shape {
+                        appearance PBRAppearance { baseColor 0.46 0.73 0 roughness 0.4 metalness 0 emissiveColor 0.1 0.2 0 }
+                        geometry Cylinder { radius 0.045 height 0.03 }
+                      }
+                      Pose {
+                        translation 0 0 0.515
+                        children [
+                          Shape {
+                            appearance PBRAppearance { baseColor 0.6 0.62 0.65 roughness 0.3 metalness 0.3 }
+                            geometry Cylinder { radius 0.012 height 1 }
+                          }
+                        ]
+                      }
+                    ]
+                    name "suction_pad"
+                  }
+                }
+              ]
+              name "trolley"
+            }
+          }
+        ]
+        name "bridge"
+      }
+    }
+  ]
+  name "gantry_robot"
+  controller "stockroom_brain"
+  supervisor TRUE
+  window "shelfmind_panel"
+}
+# Humanoid inspector: walks the side lanes, looks at the shelves, raises an alert when something is wrong
+DEF INSPECTOR Robot {
+  translation -1.2 -0.515 0
+  rotation 0 0 1 0
+  children [
+    DEF INSPECTOR_BODY Pose {
+      translation 0 0 0
+      children [
+        Pose { translation 0 0 0.5  children [ Shape { appearance DEF HUMANOID_DARK PBRAppearance { baseColor 0.15 0.16 0.18 roughness 0.5 metalness 0.3  } geometry Box { size 0.09 0.13 0.07 }  } ] }
+        Pose { translation 0 0 0.66  children [ Shape { appearance DEF HUMANOID_WHITE PBRAppearance { baseColor 0.86 0.88 0.9 roughness 0.35 metalness 0.1  } geometry Box { size 0.11 0.13 0.24 }  } ] }
+        Pose { translation 0.057 0 0.7  children [ Shape { appearance DEF HUMANOID_GREEN PBRAppearance { baseColor 0.46 0.73 0 roughness 0.3 metalness 0 emissiveColor 0.46 0.73 0 } geometry Box { size 0.004 0.07 0.03 }  } ] }
+        DEF INSPECTOR_LEG_L Pose {
+          translation 0 0.045 0.48
+          children [
+            Pose { translation 0 0 -0.21  children [ Shape { appearance USE HUMANOID_WHITE geometry Capsule { radius 0.028 height 0.36 }  } ] }
+            Pose { translation 0.025 0 -0.455  children [ Shape { appearance USE HUMANOID_DARK geometry Box { size 0.11 0.06 0.03 }  } ] }
+          ]
+        }
+        DEF INSPECTOR_LEG_R Pose {
+          translation 0 -0.045 0.48
+          children [
+            Pose { translation 0 0 -0.21  children [ Shape { appearance USE HUMANOID_WHITE geometry Capsule { radius 0.028 height 0.36 }  } ] }
+            Pose { translation 0.025 0 -0.455  children [ Shape { appearance USE HUMANOID_DARK geometry Box { size 0.11 0.06 0.03 }  } ] }
+          ]
+        }
+        DEF INSPECTOR_ARM_L Pose {
+          translation 0 0.082 0.765
+          children [
+            Shape { appearance USE HUMANOID_DARK geometry Sphere { radius 0.022 }  }
+            Pose { translation 0 0 -0.14  children [ Shape { appearance USE HUMANOID_WHITE geometry Capsule { radius 0.018 height 0.22 }  } ] }
+            Pose { translation 0 0 -0.275  children [ Shape { appearance USE HUMANOID_DARK geometry Sphere { radius 0.02 }  } ] }
+          ]
+        }
+        DEF INSPECTOR_ARM_R Pose {
+          translation 0 -0.082 0.765
+          children [
+            Shape { appearance USE HUMANOID_DARK geometry Sphere { radius 0.022 }  }
+            Pose { translation 0 0 -0.14  children [ Shape { appearance USE HUMANOID_WHITE geometry Capsule { radius 0.018 height 0.22 }  } ] }
+            Pose { translation 0 0 -0.275  children [ Shape { appearance USE HUMANOID_DARK geometry Sphere { radius 0.02 }  } ] }
+          ]
+        }
+        Pose { translation 0 0 0.795  children [ Shape { appearance USE HUMANOID_DARK geometry Cylinder { radius 0.022 height 0.04 }  } ] }
+        DEF INSPECTOR_HEAD Pose {
+          translation 0 0 0.86
+          children [
+            Shape { appearance USE HUMANOID_WHITE geometry Capsule { radius 0.062 height 0.03 }  }
+            Pose { translation 0.045 0 0.01  children [ Shape { appearance PBRAppearance { baseColor 0.04 0.05 0.07 roughness 0.1 metalness 0.5  } geometry Box { size 0.04 0.11 0.045 }  } ] }
+            Pose { translation 0.066 0 0.012  children [ Shape { appearance USE HUMANOID_GREEN geometry Box { size 0.003 0.09 0.012 }  } ] }
+          ]
+        }
+      ]
+    }
+  ]
+  name "humanoid_inspector"
+  controller "<none>"
+}
+# red_box_1: 2.0 kg
+Solid {
+  translation -0.65 0.25 0.451
+  children [
+    Shape { appearance PBRAppearance { baseColor 0.55 0.04 0.04 roughness 0.2 metalness 0.35  } geometry Box { size 0.1 0.1 0.1 } }
+  ]
+  name "red_box_1"
+  boundingObject Box { size 0.1 0.1 0.1 }
+  physics Physics { density -1 mass 2.0 }
+}
+# blue_box_1: 0.3 kg
+Solid {
+  translation -0.65 0.0 0.451
+  children [
+    Shape { appearance PBRAppearance { baseColor 0.62 0.76 1 roughness 1.0 metalness 0.0  } geometry Box { size 0.1 0.1 0.1 } }
+  ]
+  name "blue_box_1"
+  boundingObject Box { size 0.1 0.1 0.1 }
+  physics Physics { density -1 mass 0.3 }
+}
+# green_box_1: 2.0 kg
+Solid {
+  translation -0.65 -0.25 0.451
+  children [
+    Shape { appearance PBRAppearance { baseColor 0.03 0.35 0.08 roughness 0.2 metalness 0.35  } geometry Box { size 0.1 0.1 0.1 } }
+  ]
+  name "green_box_1"
+  boundingObject Box { size 0.1 0.1 0.1 }
+  physics Physics { density -1 mass 2.0 }
+}
+# red_box_2: 0.3 kg
+Solid {
+  translation -0.4 0.25 0.451
+  children [
+    Shape { appearance PBRAppearance { baseColor 1 0.6 0.6 roughness 1.0 metalness 0.0  } geometry Box { size 0.1 0.1 0.1 } }
+  ]
+  name "red_box_2"
+  boundingObject Box { size 0.1 0.1 0.1 }
+  physics Physics { density -1 mass 0.3 }
+}
+# blue_box_2: 2.0 kg
+Solid {
+  translation -0.4 0.0 0.451
+  children [
+    Shape { appearance PBRAppearance { baseColor 0.04 0.1 0.5 roughness 0.2 metalness 0.35  } geometry Box { size 0.1 0.1 0.1 } }
+  ]
+  name "blue_box_2"
+  boundingObject Box { size 0.1 0.1 0.1 }
+  physics Physics { density -1 mass 2.0 }
+}
+# green_box_2: 0.3 kg
+Solid {
+  translation -0.4 -0.25 0.451
+  children [
+    Shape { appearance PBRAppearance { baseColor 0.62 0.95 0.62 roughness 1.0 metalness 0.0  } geometry Box { size 0.1 0.1 0.1 } }
+  ]
+  name "green_box_2"
+  boundingObject Box { size 0.1 0.1 0.1 }
+  physics Physics { density -1 mass 0.3 }
+}

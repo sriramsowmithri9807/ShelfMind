@@ -1,0 +1,2 @@
+# ShelfMind job for worlds/stockroom_plus.wbt. Lines starting with # are ignored.
+Restock the shelves. Heavy boxes go on the low shelf and light boxes go on the high shelf, ordered left to right: red, green, then the rest. The glass box is fragile. Put the small orange parts box into the parts bin and close the lid afterwards.

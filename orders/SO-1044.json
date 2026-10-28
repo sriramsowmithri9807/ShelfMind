@@ -1,0 +1,10 @@
+{
+  "order_id": "SO-1044",
+  "type": "outbound",
+  "customer": "Bright Labs",
+  "note": "Fragile handling please, light items only",
+  "lines": [
+    {"item": "blue_box_1", "qty": 1, "to": "dispatch"},
+    {"item": "green_box_2", "qty": 1, "to": "dispatch"}
+  ]
+}
