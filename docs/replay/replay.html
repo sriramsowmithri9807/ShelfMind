@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>ShelfMind 3D Replay</title>
+    <link rel="stylesheet" href="replay.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230b0d11%27/%3E%3Crect x=%2712%27 y=%2716%27 width=%2740%27 height=%276%27 rx=%273%27 fill=%27%2376b900%27/%3E%3Crect x=%2728%27 y=%2722%27 width=%278%27 height=%2714%27 fill=%27%23d9fe5d%27/%3E%3Crect x=%2722%27 y=%2736%27 width=%2720%27 height=%2716%27 rx=%273%27 fill=%27%2376b900%27/%3E%3C/svg%3E">
+    <style>html, body { overflow-x: hidden; }</style>
+    <script type="module" src="https://cyberbotics.com/wwi/R2025a/WebotsView.js"></script>
+  </head>
+  <body>
+    <div class="title-container">
+      <h1>ShelfMind: <strong>interactive 3D replay</strong></h1>
+    </div>
+    <div class="webots-view-container">
+      <webots-view data-thumbnail=replay.jpg data-scene=replay.w3d data-animation=replay.json></webots-view>
+    </div>
+    <div class="description-container">
+      <p><strong>What you are watching:</strong> a real run of ShelfMind with NVIDIA Nemotron (served by Nebius Token Factory) as the brain. The gantry restocks the shelves; a box slips out of the gripper and Nemotron replans; then a box is knocked off the shelf, the humanoid inspector finds it and Nemotron plans the repair. Drag to rotate, scroll to zoom, and use the play bar to scrub.<br><br><a href="../">Back to the ShelfMind site</a> &middot; <a href="https://github.com/sriramsowmithri9807/ShelfMind">Source code on GitHub</a></p>
+    </div>
+    <div class="bottom-container">
+      <p>If the animation is not loading correctly, please refer to the <a target='_blank'
+          href='https://cyberbotics.com/doc/guide/web-scene#remarks-on-the-used-technologies-and-their-limitations'>User
+          Guide</a> it could be that your browser prevents local files CORS requests.</p>
+    </div>
+  </body>
+</html>

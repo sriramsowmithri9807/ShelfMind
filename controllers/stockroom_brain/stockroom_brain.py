@@ -277,6 +277,7 @@ class ShelfMind(Supervisor):
 
     # ----------------------------------------------------------------- labels
     def label(self, idx, text, x, y, size, color):
+        text = text.replace('"', "'")  # Webots does not escape quotes in recorded web animations
         self.label_pos[idx] = (x, y, size)
         if self.labels.get(idx) == (text, color):
             return

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShelfMind</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230b0d11%27/%3E%3Crect x=%2712%27 y=%2716%27 width=%2740%27 height=%276%27 rx=%273%27 fill=%27%2376b900%27/%3E%3Crect x=%2728%27 y=%2722%27 width=%278%27 height=%2714%27 fill=%27%23d9fe5d%27/%3E%3Crect x=%2722%27 y=%2736%27 width=%2720%27 height=%2716%27 rx=%273%27 fill=%27%2376b900%27/%3E%3C/svg%3E">
+  <meta name="description" content="A stockroom robot that understands plain English, checks its own work and fixes its own mistakes. Brain: NVIDIA Nemotron on Nebius Token Factory. Simulated in Webots.">
+  <meta property="og:title" content="ShelfMind: a robot that fixes its own mistakes">
+  <meta property="og:description" content="Plain-English jobs, NVIDIA Nemotron plans, self-recovery and a humanoid inspector. 12 / 12 steps of a full working shift with real Nemotron.">
+  <meta property="og:image" content="media/video_poster.jpg">
+  <style>
+    :root {
+      --bg: #0b0d11;
+      --panel: #14171e;
+      --line: #262b36;
+      --text: #e8eaef;
+      --muted: #9aa2b1;
+      --green: #76b900;
+      --lime: #d9fe5d;
+      --blue: #8fd3ff;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    a { color: var(--blue); }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(11, 13, 17, 0.85); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    nav .wrap { display: flex; align-items: center; gap: 22px; height: 58px; }
+    nav .logo { font-weight: 800; font-size: 20px; color: var(--green); text-decoration: none; margin-right: auto; }
+    nav a.link { color: var(--muted); text-decoration: none; font-size: 15px; }
+    nav a.link:hover { color: var(--text); }
+
+    header.hero { padding: 72px 0 40px; text-align: center; }
+    .eyebrow { color: var(--lime); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 13px; }
+    h1 { font-size: clamp(40px, 7vw, 72px); line-height: 1.05; margin: 14px 0 18px; letter-spacing: -0.02em; }
+    h1 .accent { color: var(--green); }
+    .lead { font-size: clamp(18px, 2.3vw, 22px); color: var(--muted); max-width: 760px; margin: 0 auto 30px; }
+    .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: 10px; font-weight: 600; text-decoration: none;
+      border: 1px solid var(--line); color: var(--text); background: var(--panel);
+    }
+    .btn.primary { background: var(--green); border-color: var(--green); color: #0b0d11; }
+    .btn:hover { filter: brightness(1.1); }
+    .powered { margin-top: 26px; color: var(--muted); font-size: 14px; }
+    .powered b { color: var(--text); }
+
+    .video {
+      margin: 26px auto 0; border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--line); background: #000; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    }
+    .video video { display: block; width: 100%; height: auto; }
+
+    section { padding: 70px 0 10px; }
+    h2 { font-size: clamp(28px, 4vw, 38px); margin: 0 0 8px; letter-spacing: -0.01em; }
+    .sub { color: var(--muted); margin: 0 0 28px; max-width: 760px; }
+
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .stat { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+    .stat .num { font-size: 34px; font-weight: 800; color: var(--green); line-height: 1.1; }
+    .stat .lbl { color: var(--muted); font-size: 14px; margin-top: 6px; }
+    .note { color: var(--muted); font-size: 14px; margin-top: 14px; }
+
+    .steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; counter-reset: s; }
+    .step { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+    .step::before {
+      counter-increment: s; content: counter(s);
+      display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(118, 185, 0, 0.15); color: var(--green); font-weight: 700; margin-bottom: 10px;
+    }
+    .step h3 { margin: 0 0 6px; font-size: 17px; }
+    .step p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    figure { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    figure img { display: block; width: 100%; height: auto; }
+    figcaption { padding: 14px 16px; color: var(--muted); font-size: 14px; }
+    figcaption b { color: var(--text); display: block; margin-bottom: 2px; }
+    figure.wide { grid-column: 1 / -1; }
+
+    .replay {
+      position: relative; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line);
+      background: var(--panel); aspect-ratio: 16 / 9;
+    }
+    .replay iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 15px; vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: 0; }
+    td.ok { color: var(--green); font-weight: 700; white-space: nowrap; }
+
+    .tech { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 14px; font-size: 14px; }
+    .chip b { color: var(--green); }
+
+    footer { margin-top: 80px; border-top: 1px solid var(--line); padding: 30px 0 50px; color: var(--muted); font-size: 14px; }
+    footer .wrap { display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between; }
+
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .steps { grid-template-columns: minmax(0, 1fr); }
+      .gallery { grid-template-columns: minmax(0, 1fr); }
+      nav a.link.hide-sm { display: none; }
+    }
+    @media (max-width: 520px) {
+      .wrap { padding: 0 16px; }
+      header.hero { padding-top: 44px; }
+      .stat .num { font-size: 28px; }
+      th, td { padding: 10px 12px; font-size: 14px; }
+      .replay { aspect-ratio: 4 / 5; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="wrap">
+      <a class="logo" href="#">ShelfMind</a>
+      <a class="link" href="#video">Video</a>
+      <a class="link" href="#replay">3D replay</a>
+      <a class="link hide-sm" href="#results">Results</a>
+      <a class="link" href="https://github.com/sriramsowmithri9807/ShelfMind">GitHub</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">NVIDIA Nemotron &middot; Nebius Token Factory &middot; Webots</div>
+      <h1>A robot that <span class="accent">fixes its own mistakes</span></h1>
+      <p class="lead">ShelfMind is a stockroom robot you instruct in plain English. NVIDIA Nemotron turns the job into a plan, the robot checks every step, and when something goes wrong it explains the problem to Nemotron and repairs it by itself.</p>
+      <div class="cta">
+        <a class="btn primary" href="#video">&#9654; Watch the demo</a>
+        <a class="btn" href="#replay">Explore the 3D replay</a>
+        <a class="btn" href="https://github.com/sriramsowmithri9807/ShelfMind">View the code</a>
+      </div>
+      <p class="powered">Brain: <b>NVIDIA Nemotron 3 Super</b> &nbsp;&middot;&nbsp; Served by <b>Nebius Token Factory</b> &nbsp;&middot;&nbsp; Open source, <b>MIT License</b></p>
+
+      <div class="video" id="video">
+        <video controls preload="metadata" poster="media/video_poster.jpg" playsinline>
+          <source src="media/shelfmind_demo.mp4" type="video/mp4">
+          Your browser cannot play this video. <a href="media/shelfmind_demo.mp4">Download it here.</a>
+        </video>
+      </div>
+    </div>
+  </header>
+
+  <section id="results">
+    <div class="wrap">
+      <h2>Results with real Nemotron</h2>
+      <p class="sub">Measured in the simulator with live calls to Nemotron on Nebius Token Factory. Every plan below was written by Nemotron from plain English, with no hand-coded fallback.</p>
+      <div class="stats">
+        <div class="stat"><div class="num">12 / 12</div><div class="lbl">steps of a full working shift passed</div></div>
+        <div class="stat"><div class="num">5.8 s</div><div class="lbl">average time per Nemotron plan</div></div>
+        <div class="stat"><div class="num">~29k</div><div class="lbl">tokens for the entire shift</div></div>
+        <div class="stat"><div class="num">3&ndash;5 s</div><div class="lbl">for the humanoid to spot a fallen box</div></div>
+      </div>
+      <p class="note">The full log of the shift is public: <a href="https://github.com/sriramsowmithri9807/ShelfMind/blob/main/docs/evidence/nemotron_full_shift.jsonl">docs/evidence/nemotron_full_shift.jsonl</a></p>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="sub">A closed loop: the robot never trusts a plan blindly, and never claims success it cannot prove.</p>
+      <div class="steps">
+        <div class="step"><h3>Understand</h3><p>You type or speak a job. Nemotron reads it with the exact state of every box and slot, and writes a short JSON plan.</p></div>
+        <div class="step"><h3>Act and verify</h3><p>The gantry runs each step and checks the result: did the box land where it should? Is the order really done?</p></div>
+        <div class="step"><h3>Recover</h3><p>If a box slips or a slot is taken, the robot tells Nemotron exactly what happened and gets a new plan. Up to 4 attempts.</p></div>
+        <div class="step"><h3>Watch</h3><p>A humanoid inspector patrols the aisles, hears crashes, looks with its head camera and reports any change.</p></div>
+        <div class="step"><h3>Ask</h3><p>If a job is unclear ("put the important ones away"), Nemotron asks a question instead of guessing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="see">
+    <div class="wrap">
+      <h2>See it in action</h2>
+      <p class="sub">Real footage from the simulator. Nothing here is staged: the slips and knocks are triggered on purpose to test the robot.</p>
+      <div class="gallery">
+        <figure class="wide">
+          <img src="media/restock_recovery.gif" alt="The gantry restocks the shelves, a box slips mid-carry, Nemotron replans and the robot finishes" loading="lazy">
+          <figcaption><b>Plan, act, recover</b>Nemotron plans the restock. A box slips out of the gripper, the robot reports it, Nemotron replans, and the job gets done.</figcaption>
+        </figure>
+        <figure>
+          <img src="media/humanoid_inspector.gif" alt="The humanoid inspector finds a knocked-off box and the gantry repairs it" loading="lazy">
+          <figcaption><b>The humanoid inspector</b>A box is knocked off. The humanoid hears it, raises an alert, and Nemotron plans the repair.</figcaption>
+        </figure>
+        <figure>
+          <img src="media/control_panel.jpg" alt="ShelfMind control panel showing the plan, live stats and stock orders" loading="lazy">
+          <figcaption><b>The control panel</b>Type or speak a job, run stock orders, throw trouble at the robot, and watch latency and tokens live.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="replay">
+    <div class="wrap">
+      <h2>Interactive 3D replay</h2>
+      <p class="sub">A recording of a real run that plays right in your browser. Drag to rotate, scroll to zoom, and use the play bar to scrub through the restock, the grip failure and the humanoid's repair. <a href="replay/replay.html">Open it full screen</a>.</p>
+      <div class="replay">
+        <iframe src="replay/replay.html" title="ShelfMind interactive 3D replay" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section id="shift">
+    <div class="wrap">
+      <h2>A whole working day, one key press</h2>
+      <p class="sub">The full-shift scenario strings twelve jobs and incidents together. Each step is given to Nemotron in plain English and checked against its goal afterwards.</p>
+      <table>
+        <thead><tr><th>#</th><th>Step</th><th>What it tests</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Morning restock, and a box slips on the way</td><td>planning, grip-failure recovery</td><td class="ok">Pass</td></tr>
+          <tr><td>2</td><td>Someone bumps the low shelf</td><td>the inspector finds it, Nemotron repairs it</td><td class="ok">Pass</td></tr>
+          <tr><td>3</td><td>Outbound order SO-1042</td><td>shipping to the dispatch bay</td><td class="ok">Pass</td></tr>
+          <tr><td>4</td><td>Customer returns SO-1043</td><td>putting items back where they belong</td><td class="ok">Pass</td></tr>
+          <tr><td>5&ndash;6</td><td>Build a display stack, then take it down</td><td>stacking and unstacking</td><td class="ok">Pass</td></tr>
+          <tr><td>7&ndash;8</td><td>Swap red and blue, then restore the order</td><td>re-sorting with a parking spot</td><td class="ok">Pass</td></tr>
+          <tr><td>9&ndash;10</td><td>The stockroom gets messed up, then tidied</td><td>recovery from chaos</td><td class="ok">Pass</td></tr>
+          <tr><td>11</td><td>Clear the high shelf for cleaning</td><td>moving a whole shelf</td><td class="ok">Pass</td></tr>
+          <tr><td>12</td><td>End of day: everything back in place</td><td>the final check</td><td class="ok">Pass</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="tech">
+    <div class="wrap">
+      <h2>Built with</h2>
+      <p class="sub">The robot's code uses the Python standard library only. No GPU needed to run it.</p>
+      <div class="tech">
+        <span class="chip"><b>NVIDIA</b> Nemotron 3 Super &amp; Nano (planning)</span>
+        <span class="chip"><b>Nebius</b> Token Factory (model serving)</span>
+        <span class="chip">Webots R2025a (simulation)</span>
+        <span class="chip">Gemma 3 27B on Nebius (camera vision)</span>
+        <span class="chip">Python 3 (standard library)</span>
+        <span class="chip">Browser control panel (HTML, CSS, JS)</span>
+        <span class="chip">Starter port: NVIDIA Isaac Sim + GR00T</span>
+      </div>
+      <p class="note">None of the Nemotron models on Token Factory accept images yet, so camera snapshots are read by Gemma 3; all planning, replanning and repair is done by Nemotron.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap" style="text-align:center">
+      <h2>Try it yourself</h2>
+      <p class="sub" style="margin-left:auto;margin-right:auto">Clone the repo, add a Nebius key, open the world in Webots and press <b>G</b> for the full shift.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/sriramsowmithri9807/ShelfMind">Get the code on GitHub</a>
+        <a class="btn" href="media/shelfmind_demo.mp4" download>Download the video</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>ShelfMind &middot; made by <b style="color:var(--text)">Sriram Sowmithri</b> for the NVIDIA &times; Nebius hackathon</span>
+      <span>Open source under the <a href="https://github.com/sriramsowmithri9807/ShelfMind/blob/main/LICENSE">MIT License</a></span>
+    </div>
+  </footer>
+</body>
+</html>
