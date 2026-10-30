@@ -10,6 +10,7 @@
 [![Nebius Token Factory](https://img.shields.io/badge/Nebius-Token%20Factory-D9FE5D?style=for-the-badge&labelColor=052B42)](https://nebius.com/token-factory)
 [![Webots](https://img.shields.io/badge/Webots-R2025a-E83E3E?style=for-the-badge)](https://cyberbotics.com)
 [![Python](https://img.shields.io/badge/Python-standard%20library%20only-3776AB?style=for-the-badge&logo=python&logoColor=white)](#-quick-start)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 <img src="docs/media/restock_recovery.gif" alt="ShelfMind restocking the shelves with Nemotron, recovering from a box that slips mid-carry" width="900">
 
@@ -251,6 +252,12 @@ Inside Webots: **G** for the shift, **B** for the benchmark (press **N** and run
 - 👁️ Switch vision to a **Nemotron vision-language model** as soon as one is served on Token Factory
 - 🧾 Read real stock lists and warehouse orders instead of sample JSON
 - 🤖 Several robots splitting a shift, coordinated by one Nemotron brain
+
+---
+
+## 📄 License
+
+ShelfMind is open source under the [MIT License](LICENSE). Use it, fork it, build on it.
 
 ---
 
